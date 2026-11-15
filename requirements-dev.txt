@@ -1,0 +1,2 @@
+# Uniquement pour les tests statiques, sans dépendances dans le lab en production.
+PyYAML>=6.0.2,<7
