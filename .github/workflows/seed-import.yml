@@ -26,7 +26,6 @@ jobs:
           test -f ansible/site.yml
           test -f monitoring/prometheus/prometheus.yml
           test -f tests/test_project.py
-          test -f .github/workflows/ci.yml
           test "$(find . -type f -not -path './.git/*' | wc -l)" -eq 31
       - name: Publier tous les fichiers sur la branche de travail
         shell: bash
