@@ -1,0 +1,67 @@
+---
+- name: Configuration commune des hôtes Linux
+  hosts: lab
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Message de connexion informatif
+      ansible.builtin.copy:
+        content: "Lab d'administration Linux - environnement pédagogique isolé\n"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Outils d'administration présents
+      ansible.builtin.apt:
+        name: [curl, rsync, procps, iproute2]
+        state: present
+        update_cache: false
+
+- name: Déployer le serveur web
+  hosts: web
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Créer le répertoire du site
+      ansible.builtin.file:
+        path: /srv/labsite
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Déployer la page HTML
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: /srv/labsite/index.html
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Configurer Nginx
+      ansible.builtin.template:
+        src: templates/nginx-site.conf.j2
+        dest: /etc/nginx/sites-enabled/default
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Recharger Nginx
+
+  handlers:
+    - name: Recharger Nginx
+      ansible.builtin.command: supervisorctl restart nginx
+      changed_when: true
+
+- name: Préparer le serveur de sauvegarde
+  hosts: backup
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Répertoire des snapshots
+      ansible.builtin.file:
+        path: /srv/lab-backups
+        state: directory
+        owner: root
+        group: root
+        mode: '0750'

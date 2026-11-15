@@ -1,0 +1,20 @@
+groups:
+  - name: linux-lab-alerts
+    rules:
+      - alert: WebServiceUnavailable
+        expr: probe_success{job="http-health"} == 0
+        for: 20s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Le service HTTP du lab ne répond plus"
+          description: "La sonde Blackbox a échoué pendant au moins 20 secondes."
+
+      - alert: LinuxExporterUnavailable
+        expr: up{job="node-linux"} == 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Un exporteur de métriques Linux n'est plus disponible"
+          description: "Examiner la connectivité et le processus node_exporter sur {{ $labels.instance }}."

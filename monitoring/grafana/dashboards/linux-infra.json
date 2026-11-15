@@ -1,0 +1,58 @@
+{
+  "uid": "linux-infra-lab",
+  "title": "Linux Infrastructure | Lab",
+  "description": "Deux hôtes Ubuntu supervisés et sonde HTTP",
+  "tags": ["linux", "ansible", "prometheus", "lab"],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-15m", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Service HTTP disponible",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus-lab" },
+      "targets": [{ "refId": "A", "expr": "probe_success{job=\"http-health\"}", "instant": true }],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "thresholds": { "mode": "absolute", "steps": [ {"color":"red", "value":null}, {"color":"green", "value":1} ] },
+          "mappings": [{ "type":"value", "options": {"0":{"text":"Indisponible"},"1":{"text":"Disponible"}} }]
+        },
+        "overrides": []
+      },
+      "options": { "reduceOptions": {"calcs":["lastNotNull"],"fields":"","values":false}, "colorMode":"background" }
+    },
+    {
+      "id": 2,
+      "title": "Exporters Linux en ligne",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus-lab" },
+      "targets": [{ "refId":"A", "expr":"sum(up{job=\"node-linux\"})", "instant":true }],
+      "fieldConfig": { "defaults": {"unit":"none"}, "overrides":[] },
+      "options": { "reduceOptions": {"calcs":["lastNotNull"],"fields":"","values":false}, "colorMode":"value" }
+    },
+    {
+      "id": 3,
+      "title": "Disponibilité par hôte",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 5, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus-lab" },
+      "targets": [{ "refId":"A", "expr":"up{job=\"node-linux\"}", "legendFormat":"{{instance}}" }],
+      "fieldConfig": { "defaults": {"min":0,"max":1,"unit":"none"}, "overrides":[] }
+    },
+    {
+      "id": 4,
+      "title": "Mémoire disponible (exporters)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 13, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus-lab" },
+      "targets": [{ "refId":"A", "expr":"node_memory_MemAvailable_bytes{job=\"node-linux\"}", "legendFormat":"{{instance}}" }],
+      "fieldConfig": { "defaults": {"unit":"bytes"}, "overrides":[] }
+    }
+  ]
+}
