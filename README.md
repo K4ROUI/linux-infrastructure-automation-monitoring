@@ -4,7 +4,7 @@
 
 Mini-laboratoire pour apprendre à **administrer plusieurs hôtes Ubuntu**, déployer un service avec **Ansible via SSH**, observer son fonctionnement dans **Grafana**, diagnostiquer une panne et **restaurer une sauvegarde vérifiée**.
 
-> **Validation vérifiée le 15 novembre 2026 :** les **21 tests statiques**, le déploiement Docker/Ansible par SSH, l'idempotence, la supervision Prometheus/Grafana, la sauvegarde/restauration SHA-256 et le scénario d'incident Nginx (alerte déclenchée puis résolue) sont passés sur le runner **Ubuntu 24.04 GitHub Actions**. [Consulter l'exécution réussie](https://github.com/K4ROUI/linux-infrastructure-automation-monitoring/actions/runs/43718378358). Ces résultats prouvent un essai en CI, **pas** une installation physique ou une expérimentation déjà réalisée sur mon PC.
+> **Validation vérifiée le 15 novembre 2026 :** les **21 tests statiques**, le déploiement Docker/Ansible par SSH, l'idempotence, la supervision Prometheus/Grafana, la sauvegarde/restauration SHA-256 et le scénario d'incident Nginx (alerte déclenchée puis résolue) sont passés sur le runner **Ubuntu 24.04 GitHub Actions**. [Consulter l'exécution réussie](https://github.com/K4ROUI/linux-infrastructure-automation-monitoring/actions/runs/43718378358). Ces résultats prouvent un essai en CI, **pas** une installation physique ou une expérimentation déjà réalisée sur mon PC. **Ne pas présenter** ces validations comme des tests sur serveurs physiques ou comme une expérience professionnelle.
 >
 > **Type d'environnement :** les « serveurs Ubuntu » sont des **conteneurs Docker**, **pas des machines virtuelles ni des serveurs physiques**. Ce choix permet de reproduire le lab sans trois VM. Ansible se connecte réellement en **SSH** aux deux hôtes conteneurisés.
 
