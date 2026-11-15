@@ -1,0 +1,37 @@
+name: Importer les sources complètes du laboratoire
+on:
+  push:
+    branches: [feat/linux-automation-monitoring-lab]
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Vérifier puis extraire les sources du projet
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test "$(find .seed -maxdepth 1 -type f -name 'part*.txt' | wc -l)" -eq 13
+          cat .seed/part*.txt | base64 -d > "$RUNNER_TEMP/source.tar.xz"
+          echo "5db7e4ffe51af3fc0cf535b6d36ad83c21ad76bd60139b0d27c5a9ef6de75218  $RUNNER_TEMP/source.tar.xz" | sha256sum --check
+          tar -xJf "$RUNNER_TEMP/source.tar.xz" -C .
+          rm -rf .seed .github/workflows/seed-import.yml
+          test -f ansible/site.yml
+          test -f monitoring/prometheus/prometheus.yml
+          test -f tests/test_project.py
+          test -f .github/workflows/ci.yml
+          test "$(find . -type f -not -path './.git/*' | wc -l)" -eq 31
+      - name: Publier tous les fichiers sur la branche de travail
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m "feat: importer laboratoire Linux Ansible et supervision complet"
+          git push origin HEAD:feat/linux-automation-monitoring-lab
