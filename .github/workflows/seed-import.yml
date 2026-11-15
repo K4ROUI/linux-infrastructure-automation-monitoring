@@ -20,7 +20,9 @@ jobs:
           cat .seed/part*.txt | base64 -d > "$RUNNER_TEMP/source.tar.xz"
           echo "5db7e4ffe51af3fc0cf535b6d36ad83c21ad76bd60139b0d27c5a9ef6de75218  $RUNNER_TEMP/source.tar.xz" | sha256sum --check
           tar -xJf "$RUNNER_TEMP/source.tar.xz" -C .
-          rm -rf .seed .github/workflows/seed-import.yml
+          rm -rf .seed
+          test -f .github/workflows/ci.yml
+          rm -f .github/workflows/ci.yml
           test -f ansible/site.yml
           test -f monitoring/prometheus/prometheus.yml
           test -f tests/test_project.py
